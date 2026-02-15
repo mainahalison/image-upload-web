@@ -1,52 +1,101 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Pinterest Mini</title>
+    <title>Pinterest Mini Pro</title>
     <style>
         body {
-            font-family: Arial;
-            background: #f5f5f5;
-            text-align: center;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f1f2f6;
         }
 
-        h1 {
-            margin-top: 20px;
+        .navbar {
+            background: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
         }
 
-        input {
-            margin: 20px;
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+            color: #e60023;
+        }
+
+        .upload-btn {
+            background: #e60023;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            border: none;
+        }
+
+        input[type="file"] {
+            display: none;
         }
 
         #gallery {
-            column-count: 4;
+            column-count: 3;
             column-gap: 15px;
             padding: 20px;
         }
 
-        #gallery img {
-            width: 100%;
+        .card {
+            background: white;
+            border-radius: 15px;
             margin-bottom: 15px;
+            padding: 10px;
+            break-inside: avoid;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+        }
+
+        .card img {
+            width: 100%;
             border-radius: 15px;
         }
 
-        @media (max-width: 1000px) {
-            #gallery {
-                column-count: 3;
-            }
+        .like-btn {
+            margin-top: 5px;
+            cursor: pointer;
+            color: #e60023;
+            font-weight: bold;
         }
 
-        @media (max-width: 700px) {
-            #gallery {
-                column-count: 2;
-            }
+        textarea, input[type="text"] {
+            width: 100%;
+            margin-top: 5px;
+            padding: 5px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+
+        .comments {
+            margin-top: 5px;
+            font-size: 14px;
+        }
+
+        .comment-item {
+            background: #f1f2f6;
+            padding: 5px;
+            border-radius: 8px;
+            margin-top: 3px;
         }
     </style>
 </head>
 <body>
 
-<h1>Pinterest Mini của mình ✨</h1>
-
-<input type="file" id="upload" multiple accept="image/*">
+<div class="navbar">
+    <div class="logo">Pinterest Mini Pro ✨</div>
+    <label class="upload-btn">
+        Upload
+        <input type="file" id="upload" multiple accept="image/*">
+    </label>
+</div>
 
 <div id="gallery"></div>
 
@@ -61,9 +110,52 @@
             const reader = new FileReader();
 
             reader.onload = function(e) {
+                const card = document.createElement("div");
+                card.className = "card";
+
                 const img = document.createElement("img");
                 img.src = e.target.result;
-                gallery.appendChild(img);
+
+                // Description
+                const desc = document.createElement("textarea");
+                desc.placeholder = "Viết mô tả...";
+
+                // Like
+                let likeCount = 0;
+                const likeBtn = document.createElement("div");
+                likeBtn.className = "like-btn";
+                likeBtn.innerHTML = "❤️ 0 Likes";
+
+                likeBtn.onclick = function() {
+                    likeCount++;
+                    likeBtn.innerHTML = "❤️ " + likeCount + " Likes";
+                };
+
+                // Comment input
+                const commentInput = document.createElement("input");
+                commentInput.type = "text";
+                commentInput.placeholder = "Viết bình luận...";
+
+                const commentsDiv = document.createElement("div");
+                commentsDiv.className = "comments";
+
+                commentInput.addEventListener("keypress", function(event) {
+                    if (event.key === "Enter" && commentInput.value.trim() !== "") {
+                        const comment = document.createElement("div");
+                        comment.className = "comment-item";
+                        comment.innerText = commentInput.value;
+                        commentsDiv.appendChild(comment);
+                        commentInput.value = "";
+                    }
+                });
+
+                card.appendChild(img);
+                card.appendChild(desc);
+                card.appendChild(likeBtn);
+                card.appendChild(commentInput);
+                card.appendChild(commentsDiv);
+
+                gallery.appendChild(card);
             };
 
             reader.readAsDataURL(files[i]);
