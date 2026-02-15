@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload Nhiều Ảnh</title>
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+        }
+
+        #gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        #gallery img {
+            width: 200px;
+            margin: 10px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Upload nhiều ảnh</h2>
+
+<input type="file" id="imageInput" accept="image/*" multiple>
+
+<div id="gallery"></div>
+
+<script>
+    const imageInput = document.getElementById("imageInput");
+    const gallery = document.getElementById("gallery");
+
+    imageInput.addEventListener("change", function() {
+        const files = imageInput.files;
+
+        for (let i = 0; i < files.length; i++) {
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                const img = document.createElement("img");
+                img.src = e.target.result;
+                gallery.appendChild(img);
+            }
+
+            reader.readAsDataURL(files[i]);
+        }
+    });
+</script>
+
+</body>
+</html>
