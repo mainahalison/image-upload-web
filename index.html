@@ -1,41 +1,61 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Upload Nhiều Ảnh</title>
+    <title>Pinterest Mini</title>
     <style>
         body {
             font-family: Arial;
+            background: #f5f5f5;
             text-align: center;
         }
 
-        #gallery {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
+        h1 {
             margin-top: 20px;
         }
 
+        input {
+            margin: 20px;
+        }
+
+        #gallery {
+            column-count: 4;
+            column-gap: 15px;
+            padding: 20px;
+        }
+
         #gallery img {
-            width: 200px;
-            margin: 10px;
-            border-radius: 10px;
+            width: 100%;
+            margin-bottom: 15px;
+            border-radius: 15px;
+        }
+
+        @media (max-width: 1000px) {
+            #gallery {
+                column-count: 3;
+            }
+        }
+
+        @media (max-width: 700px) {
+            #gallery {
+                column-count: 2;
+            }
         }
     </style>
 </head>
 <body>
 
-<h2>Upload nhiều ảnh</h2>
+<h1>Pinterest Mini của mình ✨</h1>
 
-<input type="file" id="imageInput" accept="image/*" multiple>
+<input type="file" id="upload" multiple accept="image/*">
 
 <div id="gallery"></div>
 
 <script>
-    const imageInput = document.getElementById("imageInput");
+    const upload = document.getElementById("upload");
     const gallery = document.getElementById("gallery");
 
-    imageInput.addEventListener("change", function() {
-        const files = imageInput.files;
+    upload.addEventListener("change", function() {
+        const files = this.files;
 
         for (let i = 0; i < files.length; i++) {
             const reader = new FileReader();
@@ -44,7 +64,7 @@
                 const img = document.createElement("img");
                 img.src = e.target.result;
                 gallery.appendChild(img);
-            }
+            };
 
             reader.readAsDataURL(files[i]);
         }
