@@ -1,92 +1,69 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Mini Social</title>
+    <title>Pinterest Mini</title>
     <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f1f2f6;
-        }
-
-        .center-box {
-            text-align: center;
-            margin-top: 80px;
-        }
-
+        body { margin:0; font-family: Arial; background:#f1f2f6;}
         .navbar {
-            background: white;
-            padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            background:white;
+            padding:15px 30px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            box-shadow:0 2px 5px rgba(0,0,0,0.1);
         }
-
-        .avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
+        .avatar { width:35px; height:35px; border-radius:50%; object-fit:cover;}
         button {
-            padding: 8px 15px;
-            border-radius: 8px;
-            border: none;
-            background: #e60023;
-            color: white;
-            cursor: pointer;
+            background:#e60023;
+            color:white;
+            border:none;
+            padding:6px 12px;
+            border-radius:20px;
+            cursor:pointer;
         }
-
-        input {
-            padding: 8px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
+        input, textarea {
+            padding:8px;
+            border-radius:8px;
+            border:1px solid #ccc;
         }
-
         #gallery {
-            column-count: 3;
-            column-gap: 15px;
-            padding: 20px;
+            column-count:3;
+            column-gap:15px;
+            padding:20px;
         }
-
         .card {
-            background: white;
-            border-radius: 15px;
-            margin-bottom: 15px;
-            padding: 10px;
-            break-inside: avoid;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+            background:white;
+            border-radius:15px;
+            margin-bottom:15px;
+            break-inside:avoid;
+            box-shadow:0 3px 10px rgba(0,0,0,0.1);
+            overflow:hidden;
         }
-
-        .card img {
-            width: 100%;
-            border-radius: 15px;
-        }
-
-        .upload-btn {
-            margin: 20px;
-            display: inline-block;
+        .card img { width:100%; }
+        .card-content { padding:10px; }
+        .comment {
+            background:#f0f0f0;
+            padding:5px;
+            border-radius:8px;
+            margin-top:5px;
+            font-size:13px;
         }
     </style>
 </head>
 <body>
 
-<!-- LOGIN PAGE -->
-<div id="loginPage" class="center-box">
+<div id="loginPage" style="text-align:center;margin-top:100px;">
     <h2>Tạo tài khoản</h2>
-    <input type="text" id="username" placeholder="Nhập username">
+    <input type="text" id="username" placeholder="Username">
     <br><br>
     <input type="file" id="avatarUpload" accept="image/*">
     <br><br>
-    <button onclick="register()">Tạo tài khoản</button>
+    <button onclick="register()">Vào Pinterest</button>
 </div>
 
-<!-- MAIN PAGE -->
 <div id="mainPage" style="display:none;">
     <div class="navbar">
-        <div><b>Pinterest Mini</b></div>
+        <b>Pinterest Mini</b>
         <div>
             <span id="displayName"></span>
             <img id="displayAvatar" class="avatar">
@@ -94,78 +71,145 @@
         </div>
     </div>
 
-    <div class="upload-btn">
-        <input type="file" id="upload" multiple accept="image/*">
+    <div style="padding:20px;">
+        <input type="file" id="upload" accept="image/*">
+        <textarea id="description" placeholder="Viết mô tả..."></textarea>
+        <button onclick="addPost()">Đăng</button>
     </div>
 
     <div id="gallery"></div>
 </div>
 
 <script>
-    const loginPage = document.getElementById("loginPage");
-    const mainPage = document.getElementById("mainPage");
 
-    function register() {
-        const username = document.getElementById("username").value;
-        const avatarFile = document.getElementById("avatarUpload").files[0];
+let posts = JSON.parse(localStorage.getItem("posts")) || [];
 
-        if(username.trim() === "" || !avatarFile) {
-            alert("Nhập username và chọn avatar nha 😆");
-            return;
-        }
+function savePosts(){
+    localStorage.setItem("posts", JSON.stringify(posts));
+}
 
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            localStorage.setItem("username", username);
-            localStorage.setItem("avatar", e.target.result);
-            loadUser();
-        }
-        reader.readAsDataURL(avatarFile);
+function register(){
+    const username = document.getElementById("username").value;
+    const avatarFile = document.getElementById("avatarUpload").files[0];
+
+    if(!username || !avatarFile){
+        alert("Nhập username và chọn avatar!");
+        return;
     }
 
-    function loadUser() {
-        const username = localStorage.getItem("username");
-        const avatar = localStorage.getItem("avatar");
-
-        if(username && avatar) {
-            loginPage.style.display = "none";
-            mainPage.style.display = "block";
-            document.getElementById("displayName").innerText = username;
-            document.getElementById("displayAvatar").src = avatar;
-        }
+    const reader = new FileReader();
+    reader.onload = function(e){
+        localStorage.setItem("currentUser", JSON.stringify({
+            username: username,
+            avatar: e.target.result
+        }));
+        loadUser();
     }
+    reader.readAsDataURL(avatarFile);
+}
 
-    function logout() {
-        localStorage.removeItem("username");
-        localStorage.removeItem("avatar");
-        location.reload();
+function loadUser(){
+    const user = JSON.parse(localStorage.getItem("currentUser"));
+
+    if(user){
+        document.getElementById("loginPage").style.display="none";
+        document.getElementById("mainPage").style.display="block";
+        document.getElementById("displayName").innerText=user.username;
+        document.getElementById("displayAvatar").src=user.avatar;
+        renderPosts();
     }
+}
 
-    loadUser();
+function logout(){
+    localStorage.removeItem("currentUser");
+    location.reload();
+}
 
-    const upload = document.getElementById("upload");
+function addPost(){
+    const file = document.getElementById("upload").files[0];
+    const desc = document.getElementById("description").value;
+    const user = JSON.parse(localStorage.getItem("currentUser"));
+
+    if(!file) return alert("Chọn ảnh!");
+
+    const reader = new FileReader();
+    reader.onload = function(e){
+        posts.unshift({
+            id: Date.now(),
+            user: user.username,
+            avatar: user.avatar,
+            image: e.target.result,
+            desc: desc,
+            likes: 0,
+            comments: []
+        });
+        savePosts();
+        renderPosts();
+    }
+    reader.readAsDataURL(file);
+}
+
+function renderPosts(){
     const gallery = document.getElementById("gallery");
+    gallery.innerHTML="";
 
-    upload.addEventListener("change", function() {
-        const files = this.files;
+    posts.forEach(post=>{
+        const card = document.createElement("div");
+        card.className="card";
 
-        for (let i = 0; i < files.length; i++) {
-            const reader = new FileReader();
+        const img = document.createElement("img");
+        img.src=post.image;
 
-            reader.onload = function(e) {
-                const card = document.createElement("div");
-                card.className = "card";
+        const content = document.createElement("div");
+        content.className="card-content";
 
-                const img = document.createElement("img");
-                img.src = e.target.result;
+        content.innerHTML = `
+            <div style="display:flex;align-items:center;gap:8px;">
+                <img src="${post.avatar}" class="avatar">
+                <b>${post.user}</b>
+            </div>
+            <div>${post.desc}</div>
+            <button onclick="likePost(${post.id})">❤️ ${post.likes}</button>
+            <div>
+                <input placeholder="Viết bình luận..." 
+                onkeypress="if(event.key==='Enter'){addComment(${post.id}, this.value); this.value='';}">
+            </div>
+        `;
 
-                card.appendChild(img);
-                gallery.appendChild(card);
-            };
+        post.comments.forEach(c=>{
+            const comment = document.createElement("div");
+            comment.className="comment";
+            comment.innerText = c.user + ": " + c.text;
+            content.appendChild(comment);
+        });
 
-            reader.readAsDataURL(files[i]);
-        }
+        card.appendChild(img);
+        card.appendChild(content);
+        gallery.appendChild(card);
     });
+}
+
+function likePost(id){
+    const post = posts.find(p=>p.id===id);
+    post.likes++;
+    savePosts();
+    renderPosts();
+}
+
+function addComment(id,text){
+    if(!text) return;
+    const user = JSON.parse(localStorage.getItem("currentUser"));
+    const post = posts.find(p=>p.id===id);
+    post.comments.push({
+        user: user.username,
+        text: text
+    });
+    savePosts();
+    renderPosts();
+}
+
+loadUser();
+
 </script>
 
 </body>
