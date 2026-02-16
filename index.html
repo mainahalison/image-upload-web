@@ -29,8 +29,11 @@ body{
 .avatar{
     width:35px;
     height:35px;
+    min-width:35px;
+    min-height:35px;
     border-radius:50%;
     object-fit:cover;
+    display:block;
 }
 
 button{
@@ -233,7 +236,7 @@ function renderPosts(){
 
         content.innerHTML=`
             <div style="display:flex;align-items:center;gap:8px;">
-                <img src="${post.avatar}" class="avatar">
+                <img src="${post.avatar}" class="avatar" style="flex-shrink:0;">
                 <b>${post.user}</b>
             </div>
             <div>${post.desc}</div>
@@ -286,3 +289,4 @@ loadUser();
 
 </body>
 </html>
+
