@@ -2,47 +2,38 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Memories</title>
-
+<title>Memories - Tết 2026</title>
+<!
 <style>
 body{
     margin:0;
     font-family:Arial, sans-serif;
-    background:#f8f9fa;
+    background:linear-gradient(to bottom,#fff5f5,#ffecec);
+    overflow-x:hidden;
 }
 
-.navbar{
-    background:white;
-    padding:15px 30px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    box-shadow:0 2px 5px rgba(0,0,0,0.1);
-}
-
-.logo{
-    font-size:22px;
+/* Banner */
+.tet-banner{
+    text-align:center;
+    padding:15px;
+    background:linear-gradient(90deg,#d90429,#ffba08);
+    color:white;
     font-weight:bold;
-    color:#ff6b81;
+    font-size:20px;
 }
 
-.avatar{
-    width:35px;
-    height:35px;
-    min-width:35px;
-    min-height:35px;
-    border-radius:50%;
-    object-fit:cover;
-    display:block;
-}
 
 button{
-    background:#ff6b81;
+    background:#d90429;
     color:white;
     border:none;
     padding:6px 12px;
     border-radius:20px;
     cursor:pointer;
+}
+
+button:hover{
+    opacity:0.85;
 }
 
 input, textarea{
@@ -66,8 +57,8 @@ input, textarea{
     overflow:hidden;
 }
 
-.card img:not(.avatar){
-  width:100%;
+.card img{
+    width:100%;
 }
 
 .card-content{
@@ -75,16 +66,41 @@ input, textarea{
 }
 
 .comment{
-    background:#f1f2f6;
+    background:#fff3cd;
     padding:5px;
     border-radius:8px;
     margin-top:5px;
     font-size:13px;
 }
+
+/* ===== HOA ĐÀO ICON ===== */
+.petal{
+    position:fixed;
+    top:-30px;
+    font-size:22px;
+    pointer-events:none;
+    animation:fall linear forwards;
+}
+
+@keyframes fall{
+    0%{
+        transform:translateY(0) rotate(0deg);
+        opacity:1;
+    }
+    100%{
+        transform:translateY(100vh) rotate(360deg);
+        opacity:0.9;
+    }
+}
 </style>
 </head>
 
 <body>
+
+<div class="tet-banner">
+🌸 Mừng Xuân Bính Ngọ 2026 🌸<br>
+THPT Mai Thanh Thế
+</div>
 
 <!-- LOGIN -->
 <div id="loginPage" style="text-align:center;margin-top:100px;">
@@ -118,44 +134,41 @@ input, textarea{
 
 <script>
 
-// LOAD POSTS SAFE
-let posts = [];
+let posts=[];
 try{
-    const stored = localStorage.getItem("posts");
-    if(stored) posts = JSON.parse(stored);
-}catch(e){
-    posts = [];
-}
+    const stored=localStorage.getItem("posts");
+    if(stored) posts=JSON.parse(stored);
+}catch(e){posts=[];}
 
 function savePosts(){
-    localStorage.setItem("posts", JSON.stringify(posts));
+    localStorage.setItem("posts",JSON.stringify(posts));
 }
 
 function register(){
-    const username = document.getElementById("username").value.trim();
-    const avatarFile = document.getElementById("avatarUpload").files[0];
+    const username=document.getElementById("username").value.trim();
+    const avatarFile=document.getElementById("avatarUpload").files[0];
 
-    if(!username || !avatarFile){
+    if(!username||!avatarFile){
         alert("Please enter username and choose avatar!");
         return;
     }
 
-    const reader = new FileReader();
-    reader.onload = function(e){
-        const user = {
-            username: username,
-            avatar: e.target.result
+    const reader=new FileReader();
+    reader.onload=function(e){
+        const user={
+            username:username,
+            avatar:e.target.result
         };
-        localStorage.setItem("currentUser", JSON.stringify(user));
+        localStorage.setItem("currentUser",JSON.stringify(user));
         loadUser();
     };
     reader.readAsDataURL(avatarFile);
 }
 
 function loadUser(){
-    const user = localStorage.getItem("currentUser");
+    const user=localStorage.getItem("currentUser");
     if(user){
-        const parsed = JSON.parse(user);
+        const parsed=JSON.parse(user);
         document.getElementById("loginPage").style.display="none";
         document.getElementById("mainPage").style.display="block";
         document.getElementById("displayName").innerText=parsed.username;
@@ -169,81 +182,53 @@ function logout(){
     location.reload();
 }
 
-// ===== FIXED ADD POST (AUTO COMPRESS IMAGE) =====
 function addPost(){
-    const file = document.getElementById("upload").files[0];
-    const desc = document.getElementById("description").value;
-    const user = JSON.parse(localStorage.getItem("currentUser"));
+    const file=document.getElementById("upload").files[0];
+    const desc=document.getElementById("description").value;
+    const user=JSON.parse(localStorage.getItem("currentUser"));
 
-    if(!file){
-        alert("Choose an image!");
-        return;
+    if(!file){alert("Choose an image!");return;}
+
+    const reader=new FileReader();
+    reader.onload=function(e){
+
+        posts.unshift({
+            id:Date.now(),
+            user:user.username,
+            avatar:user.avatar,
+            image:e.target.result,
+            desc:desc,
+            likes:0,
+            comments:[]
+        });
+
+        savePosts();
+        renderPosts();
     }
-
-    const reader = new FileReader();
-
-    reader.onload = function(e){
-
-        const img = new Image();
-        img.src = e.target.result;
-
-        img.onload = function(){
-
-            const canvas = document.createElement("canvas");
-            const ctx = canvas.getContext("2d");
-
-            const maxWidth = 600;
-            const scale = maxWidth / img.width;
-
-            canvas.width = maxWidth;
-            canvas.height = img.height * scale;
-
-            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-            const compressed = canvas.toDataURL("image/jpeg", 0.7);
-
-            posts.unshift({
-                id: Date.now(),
-                user: user.username,
-                avatar: user.avatar,
-                image: compressed,
-                desc: desc,
-                likes: 0,
-                comments: []
-            });
-
-            savePosts();
-            renderPosts();
-        }
-    }
-
     reader.readAsDataURL(file);
 }
 
 function renderPosts(){
-    const gallery = document.getElementById("gallery");
+    const gallery=document.getElementById("gallery");
     gallery.innerHTML="";
 
     posts.forEach(post=>{
         const card=document.createElement("div");
         card.className="card";
 
-        const img=document.createElement("img");
-        img.src=post.image;
-
-        const content=document.createElement("div");
-        content.className="card-content";
-
-        content.innerHTML=`
-            <div style="display:flex;align-items:center;gap:8px;">
-                <img src="${post.avatar}" class="avatar" style="flex-shrink:0;">
-                <b>${post.user}</b>
-            </div>
-            <div>${post.desc}</div>
-            <button onclick="likePost(${post.id})">❤️ ${post.likes}</button>
-            <div>
-                <input placeholder="Write a comment..."
-                onkeypress="if(event.key==='Enter'){addComment(${post.id}, this.value); this.value='';}">
+        card.innerHTML=`
+            <img src="${post.image}">
+            <div class="card-content">
+                <div style="display:flex;align-items:center;gap:8px;">
+                    <img src="${post.avatar}" class="avatar">
+                    <b>${post.user}</b>
+                </div>
+                <div>${post.desc}</div>
+                <button onclick="likePost(${post.id})">❤️ ${post.likes}</button>
+                <div>
+                    <input placeholder="Write a comment..."
+                    onkeypress="if(event.key==='Enter'){addComment(${post.id}, this.value); this.value='';}">
+                </div>
             </div>
         `;
 
@@ -251,11 +236,9 @@ function renderPosts(){
             const cm=document.createElement("div");
             cm.className="comment";
             cm.innerText=c.user+": "+c.text;
-            content.appendChild(cm);
+            card.querySelector(".card-content").appendChild(cm);
         });
 
-        card.appendChild(img);
-        card.appendChild(content);
         gallery.appendChild(card);
     });
 }
@@ -273,7 +256,7 @@ function addComment(id,text){
     if(!text) return;
     const user=JSON.parse(localStorage.getItem("currentUser"));
     const post=posts.find(p=>p.id===id);
-    if(post && user){
+    if(post&&user){
         post.comments.push({
             user:user.username,
             text:text
@@ -283,11 +266,27 @@ function addComment(id,text){
     }
 }
 
+/* ===== HOA ĐÀO ICON 🌸 ===== */
+function createPetal(){
+    const petal=document.createElement("div");
+    petal.className="petal";
+    petal.innerText="🌸";
+
+    petal.style.left=Math.random()*100+"vw";
+    petal.style.animationDuration=(5+Math.random()*5)+"s";
+    petal.style.fontSize=(18+Math.random()*15)+"px";
+
+    document.body.appendChild(petal);
+
+    setTimeout(()=>{
+        petal.remove();
+    },10000);
+}
+
+setInterval(createPetal,300);
+
 loadUser();
 
 </script>
-
 </body>
 </html>
-
-
