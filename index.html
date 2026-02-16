@@ -1,12 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Hội Chợ Xuân LỚP 12A1 N4</title>
+    <title>Mini Social</title>
     <style>
         body {
             margin: 0;
             font-family: Arial, sans-serif;
             background: #f1f2f6;
+        }
+
+        .center-box {
+            text-align: center;
+            margin-top: 80px;
         }
 
         .navbar {
@@ -16,27 +21,28 @@
             justify-content: space-between;
             align-items: center;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
         }
 
-        .logo {
-            font-size: 22px;
-            font-weight: bold;
-            color: #e60023;
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
         }
 
-        .upload-btn {
+        button {
+            padding: 8px 15px;
+            border-radius: 8px;
+            border: none;
             background: #e60023;
             color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
             cursor: pointer;
-            border: none;
         }
 
-        input[type="file"] {
-            display: none;
+        input {
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
         }
 
         #gallery {
@@ -59,47 +65,84 @@
             border-radius: 15px;
         }
 
-        .like-btn {
-            margin-top: 5px;
-            cursor: pointer;
-            color: #e60023;
-            font-weight: bold;
-        }
-
-        textarea, input[type="text"] {
-            width: 100%;
-            margin-top: 5px;
-            padding: 5px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-        }
-
-        .comments {
-            margin-top: 5px;
-            font-size: 14px;
-        }
-
-        .comment-item {
-            background: #f1f2f6;
-            padding: 5px;
-            border-radius: 8px;
-            margin-top: 3px;
+        .upload-btn {
+            margin: 20px;
+            display: inline-block;
         }
     </style>
 </head>
 <body>
 
-<div class="navbar">
-    <div class="logo">Hội Chợ Xuân Lớp 12A1 N4 ✨</div>
-    <label class="upload-btn">
-        Upload
-        <input type="file" id="upload" multiple accept="image/*">
-    </label>
+<!-- LOGIN PAGE -->
+<div id="loginPage" class="center-box">
+    <h2>Tạo tài khoản</h2>
+    <input type="text" id="username" placeholder="Nhập username">
+    <br><br>
+    <input type="file" id="avatarUpload" accept="image/*">
+    <br><br>
+    <button onclick="register()">Tạo tài khoản</button>
 </div>
 
-<div id="gallery"></div>
+<!-- MAIN PAGE -->
+<div id="mainPage" style="display:none;">
+    <div class="navbar">
+        <div><b>Pinterest Mini</b></div>
+        <div>
+            <span id="displayName"></span>
+            <img id="displayAvatar" class="avatar">
+            <button onclick="logout()">Đăng xuất</button>
+        </div>
+    </div>
+
+    <div class="upload-btn">
+        <input type="file" id="upload" multiple accept="image/*">
+    </div>
+
+    <div id="gallery"></div>
+</div>
 
 <script>
+    const loginPage = document.getElementById("loginPage");
+    const mainPage = document.getElementById("mainPage");
+
+    function register() {
+        const username = document.getElementById("username").value;
+        const avatarFile = document.getElementById("avatarUpload").files[0];
+
+        if(username.trim() === "" || !avatarFile) {
+            alert("Nhập username và chọn avatar nha 😆");
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            localStorage.setItem("username", username);
+            localStorage.setItem("avatar", e.target.result);
+            loadUser();
+        }
+        reader.readAsDataURL(avatarFile);
+    }
+
+    function loadUser() {
+        const username = localStorage.getItem("username");
+        const avatar = localStorage.getItem("avatar");
+
+        if(username && avatar) {
+            loginPage.style.display = "none";
+            mainPage.style.display = "block";
+            document.getElementById("displayName").innerText = username;
+            document.getElementById("displayAvatar").src = avatar;
+        }
+    }
+
+    function logout() {
+        localStorage.removeItem("username");
+        localStorage.removeItem("avatar");
+        location.reload();
+    }
+
+    loadUser();
+
     const upload = document.getElementById("upload");
     const gallery = document.getElementById("gallery");
 
@@ -116,45 +159,7 @@
                 const img = document.createElement("img");
                 img.src = e.target.result;
 
-                // Description
-                const desc = document.createElement("textarea");
-                desc.placeholder = "Viết mô tả...";
-
-                // Like
-                let likeCount = 0;
-                const likeBtn = document.createElement("div");
-                likeBtn.className = "like-btn";
-                likeBtn.innerHTML = "❤️ 0 Likes";
-
-                likeBtn.onclick = function() {
-                    likeCount++;
-                    likeBtn.innerHTML = "❤️ " + likeCount + " Likes";
-                };
-
-                // Comment input
-                const commentInput = document.createElement("input");
-                commentInput.type = "text";
-                commentInput.placeholder = "Viết bình luận...";
-
-                const commentsDiv = document.createElement("div");
-                commentsDiv.className = "comments";
-
-                commentInput.addEventListener("keypress", function(event) {
-                    if (event.key === "Enter" && commentInput.value.trim() !== "") {
-                        const comment = document.createElement("div");
-                        comment.className = "comment-item";
-                        comment.innerText = commentInput.value;
-                        commentsDiv.appendChild(comment);
-                        commentInput.value = "";
-                    }
-                });
-
                 card.appendChild(img);
-                card.appendChild(desc);
-                card.appendChild(likeBtn);
-                card.appendChild(commentInput);
-                card.appendChild(commentsDiv);
-
                 gallery.appendChild(card);
             };
 
@@ -165,5 +170,3 @@
 
 </body>
 </html>
-
-
