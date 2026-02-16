@@ -1,84 +1,86 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>Memories</title>
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f8f9fa;
-        }
+<meta charset="UTF-8">
+<title>Memories</title>
 
-        .navbar {
-            background: white;
-            padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
+<style>
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:#f8f9fa;
+}
 
-        .logo {
-            font-size: 22px;
-            font-weight: bold;
-            color: #ff6b81;
-        }
+.navbar{
+    background:white;
+    padding:15px 30px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    box-shadow:0 2px 5px rgba(0,0,0,0.1);
+}
 
-        .avatar {
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
+.logo{
+    font-size:22px;
+    font-weight:bold;
+    color:#ff6b81;
+}
 
-        button {
-            background: #ff6b81;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 20px;
-            cursor: pointer;
-        }
+.avatar{
+    width:35px;
+    height:35px;
+    border-radius:50%;
+    object-fit:cover;
+}
 
-        input, textarea {
-            padding: 8px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-        }
+button{
+    background:#ff6b81;
+    color:white;
+    border:none;
+    padding:6px 12px;
+    border-radius:20px;
+    cursor:pointer;
+}
 
-        #gallery {
-            column-count: 3;
-            column-gap: 15px;
-            padding: 20px;
-        }
+input, textarea{
+    padding:8px;
+    border-radius:8px;
+    border:1px solid #ccc;
+}
 
-        .card {
-            background: white;
-            border-radius: 15px;
-            margin-bottom: 15px;
-            break-inside: avoid;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-            overflow: hidden;
-        }
+#gallery{
+    column-count:3;
+    column-gap:15px;
+    padding:20px;
+}
 
-        .card img {
-            width: 100%;
-        }
+.card{
+    background:white;
+    border-radius:15px;
+    margin-bottom:15px;
+    break-inside:avoid;
+    box-shadow:0 3px 10px rgba(0,0,0,0.1);
+    overflow:hidden;
+}
 
-        .card-content {
-            padding: 10px;
-        }
+.card img{
+    width:100%;
+}
 
-        .comment {
-            background: #f1f2f6;
-            padding: 5px;
-            border-radius: 8px;
-            margin-top: 5px;
-            font-size: 13px;
-        }
-    </style>
+.card-content{
+    padding:10px;
+}
+
+.comment{
+    background:#f1f2f6;
+    padding:5px;
+    border-radius:8px;
+    margin-top:5px;
+    font-size:13px;
+}
+</style>
 </head>
+
 <body>
 
 <!-- LOGIN -->
@@ -113,11 +115,12 @@
 
 <script>
 
+// LOAD POSTS SAFE
 let posts = [];
-try {
+try{
     const stored = localStorage.getItem("posts");
-    if (stored) posts = JSON.parse(stored);
-} catch(e) {
+    if(stored) posts = JSON.parse(stored);
+}catch(e){
     posts = [];
 }
 
@@ -149,11 +152,11 @@ function register(){
 function loadUser(){
     const user = localStorage.getItem("currentUser");
     if(user){
-        const parsedUser = JSON.parse(user);
+        const parsed = JSON.parse(user);
         document.getElementById("loginPage").style.display="none";
         document.getElementById("mainPage").style.display="block";
-        document.getElementById("displayName").innerText=parsedUser.username;
-        document.getElementById("displayAvatar").src=parsedUser.avatar;
+        document.getElementById("displayName").innerText=parsed.username;
+        document.getElementById("displayAvatar").src=parsed.avatar;
         renderPosts();
     }
 }
@@ -163,6 +166,7 @@ function logout(){
     location.reload();
 }
 
+// ===== FIXED ADD POST (AUTO COMPRESS IMAGE) =====
 function addPost(){
     const file = document.getElementById("upload").files[0];
     const desc = document.getElementById("description").value;
@@ -174,19 +178,42 @@ function addPost(){
     }
 
     const reader = new FileReader();
+
     reader.onload = function(e){
-        posts.unshift({
-            id: Date.now(),
-            user: user.username,
-            avatar: user.avatar,
-            image: e.target.result,
-            desc: desc,
-            likes: 0,
-            comments: []
-        });
-        savePosts();
-        renderPosts();
-    };
+
+        const img = new Image();
+        img.src = e.target.result;
+
+        img.onload = function(){
+
+            const canvas = document.createElement("canvas");
+            const ctx = canvas.getContext("2d");
+
+            const maxWidth = 600;
+            const scale = maxWidth / img.width;
+
+            canvas.width = maxWidth;
+            canvas.height = img.height * scale;
+
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+            const compressed = canvas.toDataURL("image/jpeg", 0.7);
+
+            posts.unshift({
+                id: Date.now(),
+                user: user.username,
+                avatar: user.avatar,
+                image: compressed,
+                desc: desc,
+                likes: 0,
+                comments: []
+            });
+
+            savePosts();
+            renderPosts();
+        }
+    }
+
     reader.readAsDataURL(file);
 }
 
@@ -195,13 +222,13 @@ function renderPosts(){
     gallery.innerHTML="";
 
     posts.forEach(post=>{
-        const card = document.createElement("div");
+        const card=document.createElement("div");
         card.className="card";
 
-        const img = document.createElement("img");
+        const img=document.createElement("img");
         img.src=post.image;
 
-        const content = document.createElement("div");
+        const content=document.createElement("div");
         content.className="card-content";
 
         content.innerHTML=`
@@ -212,16 +239,16 @@ function renderPosts(){
             <div>${post.desc}</div>
             <button onclick="likePost(${post.id})">❤️ ${post.likes}</button>
             <div>
-                <input placeholder="Write a comment..." 
+                <input placeholder="Write a comment..."
                 onkeypress="if(event.key==='Enter'){addComment(${post.id}, this.value); this.value='';}">
             </div>
         `;
 
         post.comments.forEach(c=>{
-            const comment=document.createElement("div");
-            comment.className="comment";
-            comment.innerText=c.user+": "+c.text;
-            content.appendChild(comment);
+            const cm=document.createElement("div");
+            cm.className="comment";
+            cm.innerText=c.user+": "+c.text;
+            content.appendChild(cm);
         });
 
         card.appendChild(img);
