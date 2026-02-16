@@ -1,292 +1,309 @@
+
+    
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
-<meta charset="UTF-8">
-<title>Memories - Tết 2026</title>
-<!
-<style>
-body{
-    margin:0;
-    font-family:Arial, sans-serif;
-    background:linear-gradient(to bottom,#fff5f5,#ffecec);
-    overflow-x:hidden;
-}
-
-/* Banner */
-.tet-banner{
-    text-align:center;
-    padding:15px;
-    background:linear-gradient(90deg,#d90429,#ffba08);
-    color:white;
-    font-weight:bold;
-    font-size:20px;
-}
-
-
-button{
-    background:#d90429;
-    color:white;
-    border:none;
-    padding:6px 12px;
-    border-radius:20px;
-    cursor:pointer;
-}
-
-button:hover{
-    opacity:0.85;
-}
-
-input, textarea{
-    padding:8px;
-    border-radius:8px;
-    border:1px solid #ccc;
-}
-
-#gallery{
-    column-count:3;
-    column-gap:15px;
-    padding:20px;
-}
-
-.card{
-    background:white;
-    border-radius:15px;
-    margin-bottom:15px;
-    break-inside:avoid;
-    box-shadow:0 3px 10px rgba(0,0,0,0.1);
-    overflow:hidden;
-}
-
-.card img{
-    width:100%;
-}
-
-.card-content{
-    padding:10px;
-}
-
-.comment{
-    background:#fff3cd;
-    padding:5px;
-    border-radius:8px;
-    margin-top:5px;
-    font-size:13px;
-}
-
-/* ===== HOA ĐÀO ICON ===== */
-.petal{
-    position:fixed;
-    top:-30px;
-    font-size:22px;
-    pointer-events:none;
-    animation:fall linear forwards;
-}
-
-@keyframes fall{
-    0%{
-        transform:translateY(0) rotate(0deg);
-        opacity:1;
-    }
-    100%{
-        transform:translateY(100vh) rotate(360deg);
-        opacity:0.9;
-    }
-}
-</style>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>THPT MAI THANH THẾ | ULTIMATE SOCIAL 2026</title>
+   
+   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600;800&family=Pattaya&display=swap" rel="stylesheet">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+   
+   <style>
+       :root {
+           --primary: #ff4757;
+           --gold: #ffa502;
+           --neon-blue: #00d2ff;
+           --glass: rgba(255, 255, 255, 0.88);
+           --shadow: 0 8px 32px 0 rgba(214, 48, 49, 0.2);
+       }
+ 
+       * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+       
+       body { 
+           font-family: 'Lexend', sans-serif; 
+           background: #000;
+           /* Nền động rực rỡ */
+           background: linear-gradient(-45deg, #740001, #ae0001, #d3a625, #000000);
+           background-size: 400% 400%;
+           animation: gradientBG 15s ease infinite;
+           padding-top: 120px;
+           color: #333;
+           min-height: 100vh;
+       }
+ 
+       @keyframes gradientBG {
+           0% { background-position: 0% 50%; }
+           50% { background-position: 100% 50%; }
+           100% { background-position: 0% 50%; }
+       }
+ 
+       /* --- THANH THÔNG BÁO --- */
+       .marquee-top {
+           position: fixed; top: 75px; width: 100%; background: var(--gold);
+           color: #000; padding: 6px 0; font-size: 0.85rem; font-weight: 800;
+           z-index: 998; border-bottom: 2px solid white;
+       }
+ 
+       /* --- NAVIGATION --- */
+       nav {
+           position: fixed; top: 0; width: 100%; height: 75px;
+           background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(15px);
+           display: flex; justify-content: space-between; align-items: center;
+           padding: 0 5%; z-index: 1001; border-bottom: 3px solid var(--gold);
+       }
+       .logo { font-family: 'Pattaya'; color: #fff; font-size: 2.3rem; text-shadow: 0 0 10px var(--gold); }
+ 
+       /* --- LOGIN CARD --- */
+       #auth-overlay {
+           position: fixed; inset: 0; z-index: 10002;
+           background: rgba(0,0,0,0.9); display: flex; align-items: center; justify-content: center;
+       }
+       .auth-card {
+           background: var(--glass); padding: 50px; border-radius: 40px; width: 450px; text-align: center;
+           border: 5px solid var(--gold); box-shadow: 0 0 50px var(--primary);
+       }
+ 
+       /* --- LAYOUT --- */
+       .main-container { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 320px 1fr; gap: 30px; padding: 20px; }
+ 
+       /* --- SIDEBAR GLASS --- */
+       .sidebar-box {
+           background: var(--glass); border-radius: 30px; padding: 25px;
+           box-shadow: var(--shadow); border: 1px solid rgba(255,255,255,0.4);
+           position: sticky; top: 130px;
+       }
+       .user-avatar-main {
+           width: 110px; height: 110px; border-radius: 50%;
+           border: 4px solid var(--gold); box-shadow: 0 0 20px var(--gold);
+           margin-bottom: 15px;
+       }
+ 
+       /* --- FEED BÀI VIẾT --- */
+       .post-box {
+           background: var(--glass); border-radius: 35px; padding: 25px;
+           margin-bottom: 30px; box-shadow: var(--shadow);
+           border: 1px solid rgba(255,255,255,0.5); transition: 0.3s;
+       }
+       .post-box:hover { transform: translateY(-5px); background: #fff; }
+ 
+       .post-img-vip {
+           width: 100%; border-radius: 25px; margin: 15px 0;
+           border: 5px solid #fff; box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+       }
+ 
+       /* --- TƯƠNG TÁC --- */
+       .stats { display: flex; justify-content: space-between; padding: 10px 5px; color: #666; font-size: 0.9rem; border-bottom: 1px solid #eee; }
+       .actions { display: flex; gap: 10px; margin-top: 15px; }
+       .btn-act {
+           flex: 1; padding: 12px; border: none; border-radius: 20px;
+           background: #f1f2f6; cursor: pointer; font-weight: 700;
+           display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.3s;
+       }
+       .btn-act:hover { background: var(--primary); color: #fff; }
+ 
+       /* --- BÌNH LUẬN --- */
+       .cmt-wrap { background: rgba(0,0,0,0.03); border-radius: 20px; padding: 15px; margin-top: 15px; }
+       .cmt-bubble { background: white; padding: 10px 15px; border-radius: 15px; margin-bottom: 8px; font-size: 0.9rem; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+ 
+       /* --- NÚT ĐĂNG --- */
+       .btn-gold {
+           background: linear-gradient(45deg, var(--primary), var(--gold));
+           color: #fff; border: none; padding: 15px 30px; border-radius: 50px;
+           font-weight: 800; cursor: pointer; box-shadow: 0 10px 20px rgba(214, 48, 49, 0.3);
+       }
+       .btn-gold:hover { transform: scale(1.05); letter-spacing: 1px; }
+ 
+       textarea { width: 100%; border: none; background: rgba(0,0,0,0.05); padding: 20px; border-radius: 25px; font-family: inherit; font-size: 1rem; outline: none; }
+ 
+       @media (max-width: 900px) { .main-container { grid-template-columns: 1fr; } .sidebar-box { display: none; } }
+   </style>
 </head>
-
 <body>
-
-<div class="tet-banner">
-🌸 Mừng Xuân Bính Ngọ 2026 🌸<br>
-THPT Mai Thanh Thế
-</div>
-
-<!-- LOGIN -->
-<div id="loginPage" style="text-align:center;margin-top:100px;">
-    <h2>Welcome to Memories</h2>
-    <input type="text" id="username" placeholder="Username">
-    <br><br>
-    <input type="file" id="avatarUpload" accept="image/*">
-    <br><br>
-    <button onclick="register()">Enter</button>
-</div>
-
-<!-- MAIN -->
-<div id="mainPage" style="display:none;">
-    <div class="navbar">
-        <div class="logo">Memories</div>
-        <div>
-            <span id="displayName"></span>
-            <img id="displayAvatar" class="avatar">
-            <button onclick="logout()">Logout</button>
-        </div>
-    </div>
-
-    <div style="padding:20px;">
-        <input type="file" id="upload" accept="image/*">
-        <textarea id="description" placeholder="Write your memory..."></textarea>
-        <button onclick="addPost()">Post</button>
-    </div>
-
-    <div id="gallery"></div>
-</div>
-
-<script>
-
-let posts=[];
-try{
-    const stored=localStorage.getItem("posts");
-    if(stored) posts=JSON.parse(stored);
-}catch(e){posts=[];}
-
-function savePosts(){
-    localStorage.setItem("posts",JSON.stringify(posts));
-}
-
-function register(){
-    const username=document.getElementById("username").value.trim();
-    const avatarFile=document.getElementById("avatarUpload").files[0];
-
-    if(!username||!avatarFile){
-        alert("Please enter username and choose avatar!");
-        return;
-    }
-
-    const reader=new FileReader();
-    reader.onload=function(e){
-        const user={
-            username:username,
-            avatar:e.target.result
-        };
-        localStorage.setItem("currentUser",JSON.stringify(user));
-        loadUser();
-    };
-    reader.readAsDataURL(avatarFile);
-}
-
-function loadUser(){
-    const user=localStorage.getItem("currentUser");
-    if(user){
-        const parsed=JSON.parse(user);
-        document.getElementById("loginPage").style.display="none";
-        document.getElementById("mainPage").style.display="block";
-        document.getElementById("displayName").innerText=parsed.username;
-        document.getElementById("displayAvatar").src=parsed.avatar;
-        renderPosts();
-    }
-}
-
-function logout(){
-    localStorage.removeItem("currentUser");
-    location.reload();
-}
-
-function addPost(){
-    const file=document.getElementById("upload").files[0];
-    const desc=document.getElementById("description").value;
-    const user=JSON.parse(localStorage.getItem("currentUser"));
-
-    if(!file){alert("Choose an image!");return;}
-
-    const reader=new FileReader();
-    reader.onload=function(e){
-
-        posts.unshift({
-            id:Date.now(),
-            user:user.username,
-            avatar:user.avatar,
-            image:e.target.result,
-            desc:desc,
-            likes:0,
-            comments:[]
-        });
-
-        savePosts();
-        renderPosts();
-    }
-    reader.readAsDataURL(file);
-}
-
-function renderPosts(){
-    const gallery=document.getElementById("gallery");
-    gallery.innerHTML="";
-
-    posts.forEach(post=>{
-        const card=document.createElement("div");
-        card.className="card";
-
-        card.innerHTML=`
-            <img src="${post.image}">
-            <div class="card-content">
-                <div style="display:flex;align-items:center;gap:8px;">
-                    <img src="${post.avatar}" class="avatar">
-                    <b>${post.user}</b>
-                </div>
-                <div>${post.desc}</div>
-                <button onclick="likePost(${post.id})">❤️ ${post.likes}</button>
-                <div>
-                    <input placeholder="Write a comment..."
-                    onkeypress="if(event.key==='Enter'){addComment(${post.id}, this.value); this.value='';}">
-                </div>
-            </div>
-        `;
-
-        post.comments.forEach(c=>{
-            const cm=document.createElement("div");
-            cm.className="comment";
-            cm.innerText=c.user+": "+c.text;
-            card.querySelector(".card-content").appendChild(cm);
-        });
-
-        gallery.appendChild(card);
-    });
-}
-
-function likePost(id){
-    const post=posts.find(p=>p.id===id);
-    if(post){
-        post.likes++;
-        savePosts();
-        renderPosts();
-    }
-}
-
-function addComment(id,text){
-    if(!text) return;
-    const user=JSON.parse(localStorage.getItem("currentUser"));
-    const post=posts.find(p=>p.id===id);
-    if(post&&user){
-        post.comments.push({
-            user:user.username,
-            text:text
-        });
-        savePosts();
-        renderPosts();
-    }
-}
-
-/* ===== HOA ĐÀO ICON 🌸 ===== */
-function createPetal(){
-    const petal=document.createElement("div");
-    petal.className="petal";
-    petal.innerText="🌸";
-
-    petal.style.left=Math.random()*100+"vw";
-    petal.style.animationDuration=(5+Math.random()*5)+"s";
-    petal.style.fontSize=(18+Math.random()*15)+"px";
-
-    document.body.appendChild(petal);
-
-    setTimeout(()=>{
-        petal.remove();
-    },10000);
-}
-
-setInterval(createPetal,300);
-
-loadUser();
-
-</script>
+ 
+   <canvas id="canvas" style="position:fixed; top:0; left:0; pointer-events:none; z-index:999;"></canvas>
+ 
+   <div class="marquee-top">
+       <marquee>🧧 CHÚC MỪNG NĂM MỚI 2026 - THPT MAI THANH THẾ - KẾT NỐI SỨC MẠNH, CHIA SẺ NIỀM VUI 🧧 HÀNH TRÌNH MỚI, THÀNH CÔNG MỚI! 🏮</marquee>
+   </div>
+ 
+   <div id="auth-overlay">
+       <div class="auth-card">
+           <h1 style="font-family:'Pattaya'; color:var(--primary); font-size: 3rem;">MTT SOCIAL</h1>
+           <p style="font-weight: 800; letter-spacing: 2px;">PHIÊN BẢN TỐI THƯỢNG 2026</p>
+           <input type="text" id="user-name" placeholder="Nhập tên của bạn..." style="width:100%; padding:18px; margin:25px 0; border-radius:50px; border:2px solid #ddd; text-align:center; font-size:1.1rem;">
+           <button class="btn-gold" style="width:100%" onclick="startApp()">KHAI XUÂN NGAY 🧨</button>
+       </div>
+   </div>
+ 
+   <nav>
+       <div class="logo">THPT Mai Thanh Thế</div>
+       <div id="nav-info" style="display:flex; align-items:center; gap:15px; color:white; font-weight:bold;"></div>
+   </nav>
+ 
+   <div class="main-container">
+       <aside>
+           <div class="sidebar-box">
+               <div style="text-align: center;">
+                   <img id="side-avatar" class="user-avatar-main" src="">
+                   <h2 id="side-display-name" style="color:var(--primary); font-weight:800;">Tên Bạn</h2>
+                   <span style="background:var(--gold); color:#000; padding:2px 12px; border-radius:20px; font-size:0.7rem; font-weight:900;">THÀNH VIÊN VIP</span>
+               </div>
+               <div style="margin-top:25px; font-size:0.9rem; line-height:2;">
+                   <p><i class="fas fa-university"></i> <b>Trường:</b> Mai Thanh Thế</p>
+                   <p><i class="fas fa-calendar-check"></i> <b>Năm học:</b> 2025 - 2026</p>
+                   <p><i class="fas fa-fire" style="color:orange"></i> <b>Tương tác:</b> Cao</p>
+               </div>
+               <hr style="margin:20px 0; border:none; border-top:1px solid #eee;">
+               <button class="btn-gold" style="width:100%; font-size:0.8rem;" onclick="location.reload()">ĐĂNG XUẤT</button>
+           </div>
+       </aside>
+ 
+       <main>
+           <div class="post-box" style="border-top: 6px solid var(--gold);">
+               <div style="display:flex; gap:15px;">
+                   <img id="input-avatar" style="width:50px; height:50px; border-radius:50%; border:2px solid var(--gold);" src="">
+                   <textarea id="postContent" placeholder="Viết gì đó thật ý nghĩa cho năm mới nhé..."></textarea>
+               </div>
+               <div id="preview-container" style="display:none; margin-top:15px; position:relative;">
+                   <img id="img-output" style="width:100%; border-radius:20px; border:4px solid var(--gold);">
+                   <button onclick="clearImg()" style="position:absolute; top:10px; right:10px; background:var(--primary); color:#fff; border:none; border-radius:50%; width:35px; height:35px; cursor:pointer;">&times;</button>
+               </div>
+               <div style="display:flex; justify-content:space-between; align-items:center; margin-top:20px; padding-top:15px; border-top:1px solid #eee;">
+                   <label style="cursor:pointer; color:#45bd62; font-weight:800;">
+                       <i class="fas fa-image fa-lg"></i> ĐÍNH KÈM ẢNH
+                       <input type="file" id="file-input" hidden accept="image/*">
+                   </label>
+                   <button class="btn-gold" onclick="handlePost()">CHIA SẺ 🚀</button>
+               </div>
+           </div>
+ 
+           <div id="feed-container"></div>
+       </main>
+   </div>
+ 
+   <script type="module">
+       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+       import { getDatabase, ref, push, onValue, set, get, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+ 
+       const firebaseConfig = { databaseURL: "https://tet-mtt-default-rtdb.firebaseio.com" };
+       const app = initializeApp(firebaseConfig);
+       const db = getDatabase(app);
+ 
+       let CURRENT_USER = null;
+ 
+       window.startApp = () => {
+           const name = document.getElementById('user-name').value.trim();
+           if(!name) return;
+           CURRENT_USER = { name: name, avatar: `https://ui-avatars.com/api/?background=random&color=fff&name=${name}&size=150&bold=true` };
+           
+           document.getElementById('auth-overlay').style.display = 'none';
+           document.getElementById('nav-info').innerHTML = `<span>${name}</span><img src="${CURRENT_USER.avatar}" style="width:40px; border-radius:50%; border:2px solid gold;">`;
+           document.getElementById('side-avatar').src = CURRENT_USER.avatar;
+           document.getElementById('input-avatar').src = CURRENT_USER.avatar;
+           document.getElementById('side-display-name').innerText = name;
+           
+           loadFeed();
+       };
+ 
+       let postImgData = "";
+       document.getElementById('file-input').onchange = (e) => {
+           const reader = new FileReader();
+           reader.onload = () => {
+               postImgData = reader.result;
+               document.getElementById('img-output').src = postImgData;
+               document.getElementById('preview-container').style.display = 'block';
+           };
+           reader.readAsDataURL(e.target.files[0]);
+       };
+       window.clearImg = () => { postImgData = ""; document.getElementById('preview-container').style.display = 'none'; };
+ 
+       window.handlePost = () => {
+           const text = document.getElementById('postContent').value.trim();
+           if(!text && !postImgData) return;
+           push(ref(db, 'ultimate_v2'), {
+               author: CURRENT_USER.name,
+               avatar: CURRENT_USER.avatar,
+               content: text,
+               image: postImgData,
+               likes: 0,
+               time: Date.now()
+           });
+           document.getElementById('postContent').value = "";
+           clearImg();
+       };
+ 
+       function loadFeed() {
+           onValue(ref(db, 'ultimate_v2'), (snap) => {
+               const container = document.getElementById('feed-container');
+               container.innerHTML = "";
+               const data = snap.val();
+               if(!data) return;
+ 
+               Object.keys(data).reverse().forEach(id => {
+                   const p = data[id];
+                   const div = document.createElement('div');
+                   div.className = 'post-box';
+                   
+                   let cmtSection = "";
+                   if(p.comments) Object.values(p.comments).forEach(c => {
+                       cmtSection += `<div class="cmt-bubble"><b>${c.user}:</b> ${c.text}</div>`;
+                   });
+ 
+                   div.innerHTML = `
+                       <div style="display:flex; align-items:center; gap:12px;">
+                           <img src="${p.avatar}" style="width:45px; border-radius:50%; border:2px solid var(--gold);">
+                           <div><b>${p.author}</b><br><small style="color:#888">${new Date(p.time).toLocaleString()}</small></div>
+                       </div>
+                       <div style="margin-top:15px; font-size:1.1rem; line-height:1.6;">${p.content}</div>
+                       ${p.image ? `<img src="${p.image}" class="post-img-vip">` : ''}
+                       
+                       <div class="stats">
+                           <span><i class="fas fa-heart" style="color:var(--primary)"></i> <b>${p.likes || 0}</b> lượt thích</span>
+                           <span>${p.comments ? Object.keys(p.comments).length : 0} bình luận</span>
+                       </div>
+ 
+                       <div class="actions">
+                           <button class="btn-act" onclick="likePost('${id}')"><i class="fas fa-fire"></i> THÍCH</button>
+                           <button class="btn-act" onclick="document.getElementById('in-${id}').focus()"><i class="fas fa-comment-alt"></i> BÌNH LUẬN</button>
+                       </div>
+ 
+                       <div class="cmt-wrap">
+                           <div id="cmt-list-${id}">${cmtSection}</div>
+                           <div style="display:flex; gap:10px; margin-top:15px;">
+                               <input type="text" id="in-${id}" placeholder="Viết phản hồi..." style="flex:1; border-radius:20px; border:1px solid #ddd; padding:10px 15px; outline:none; font-size:0.85rem;">
+                               <button class="btn-gold" style="padding:5px 15px; font-size:0.8rem;" onclick="sendCmt('${id}')">GỬI</button>
+                           </div>
+                       </div>
+                   `;
+                   container.appendChild(div);
+               });
+           });
+       }
+ 
+       window.likePost = (id) => {
+           const r = ref(db, `ultimate_v2/${id}/likes`);
+           get(r).then(s => update(ref(db, `ultimate_v2/${id}`), { likes: (s.val() || 0) + 1 }));
+       };
+ 
+       window.sendCmt = (id) => {
+           const v = document.getElementById(`in-${id}`).value;
+           if(!v) return;
+           push(ref(db, `ultimate_v2/${id}/comments`), { user: CURRENT_USER.name, text: v });
+           document.getElementById(`in-${id}`).value = "";
+       };
+ 
+       // HIỆU ỨNG VẬT PHẨM TẾT RƠI
+       setInterval(() => {
+           const icons = ['🧧', '🌸', '🏮', '✨', '🌼', '💰', '🐎'];
+           const f = document.createElement('div');
+           f.style.cssText = `position:fixed; z-index:1000; top:-50px; left:${Math.random()*100}vw; pointer-events:none; font-size:${Math.random()*20+20}px;`;
+           f.innerHTML = icons[Math.floor(Math.random()*icons.length)];
+           document.body.appendChild(f);
+           f.animate([{top:'-50px', transform:'rotate(0deg)'}, {top:'110vh', transform:`rotate(720deg)`}], {duration: Math.random()*3000+5000}).onfinish = () => f.remove();
+       }, 350);
+   </script>
 </body>
 </html>
+
