@@ -1,80 +1,111 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Mini Socical<title>
+    <meta charset="UTF-8">
+    <title>Memories</title>
     <style>
-        body { margin:0; font-family: Arial; background:#f1f2f6;}
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f8f9fa;
+        }
+
         .navbar {
-            background:white;
-            padding:15px 30px;
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            box-shadow:0 2px 5px rgba(0,0,0,0.1);
+            background: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-        .avatar { width:35px; height:35px; border-radius:50%; object-fit:cover;}
+
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+            color: #ff6b81;
+        }
+
+        .avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
         button {
-            background:#e60023;
-            color:white;
-            border:none;
-            padding:6px 12px;
-            border-radius:20px;
-            cursor:pointer;
+            background: #ff6b81;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
         }
+
         input, textarea {
-            padding:8px;
-            border-radius:8px;
-            border:1px solid #ccc;
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
         }
+
         #gallery {
-            column-count:3;
-            column-gap:15px;
-            padding:20px;
+            column-count: 3;
+            column-gap: 15px;
+            padding: 20px;
         }
+
         .card {
-            background:white;
-            border-radius:15px;
-            margin-bottom:15px;
-            break-inside:avoid;
-            box-shadow:0 3px 10px rgba(0,0,0,0.1);
-            overflow:hidden;
+            background: white;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            break-inside: avoid;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
         }
-        .card img { width:100%; }
-        .card-content { padding:10px; }
+
+        .card img {
+            width: 100%;
+        }
+
+        .card-content {
+            padding: 10px;
+        }
+
         .comment {
-            background:#f0f0f0;
-            padding:5px;
-            border-radius:8px;
-            margin-top:5px;
-            font-size:13px;
+            background: #f1f2f6;
+            padding: 5px;
+            border-radius: 8px;
+            margin-top: 5px;
+            font-size: 13px;
         }
     </style>
 </head>
 <body>
 
+<!-- LOGIN -->
 <div id="loginPage" style="text-align:center;margin-top:100px;">
-    <h2>Tạo tài khoản</h2>
+    <h2>Welcome to Memories</h2>
     <input type="text" id="username" placeholder="Username">
     <br><br>
     <input type="file" id="avatarUpload" accept="image/*">
     <br><br>
-    <button onclick="register()">Đăng nhập</button>
+    <button onclick="register()">Enter</button>
 </div>
 
+<!-- MAIN -->
 <div id="mainPage" style="display:none;">
     <div class="navbar">
-        <b>Mini Socical</b>
+        <div class="logo">Memories</div>
         <div>
             <span id="displayName"></span>
             <img id="displayAvatar" class="avatar">
-            <button onclick="logout()">Đăng xuất</button>
+            <button onclick="logout()">Logout</button>
         </div>
     </div>
 
     <div style="padding:20px;">
         <input type="file" id="upload" accept="image/*">
-        <textarea id="description" placeholder="Viết mô tả..."></textarea>
-        <button onclick="addPost()">Đăng</button>
+        <textarea id="description" placeholder="Write your memory..."></textarea>
+        <button onclick="addPost()">Post</button>
     </div>
 
     <div id="gallery"></div>
@@ -82,40 +113,47 @@
 
 <script>
 
-let posts = JSON.parse(localStorage.getItem("posts")) || [];
+let posts = [];
+try {
+    const stored = localStorage.getItem("posts");
+    if (stored) posts = JSON.parse(stored);
+} catch(e) {
+    posts = [];
+}
 
 function savePosts(){
     localStorage.setItem("posts", JSON.stringify(posts));
 }
 
 function register(){
-    const username = document.getElementById("username").value;
+    const username = document.getElementById("username").value.trim();
     const avatarFile = document.getElementById("avatarUpload").files[0];
 
     if(!username || !avatarFile){
-        alert("Nhập username và chọn avatar!");
+        alert("Please enter username and choose avatar!");
         return;
     }
 
     const reader = new FileReader();
     reader.onload = function(e){
-        localStorage.setItem("currentUser", JSON.stringify({
+        const user = {
             username: username,
             avatar: e.target.result
-        }));
+        };
+        localStorage.setItem("currentUser", JSON.stringify(user));
         loadUser();
-    }
+    };
     reader.readAsDataURL(avatarFile);
 }
 
 function loadUser(){
-    const user = JSON.parse(localStorage.getItem("currentUser"));
-
+    const user = localStorage.getItem("currentUser");
     if(user){
+        const parsedUser = JSON.parse(user);
         document.getElementById("loginPage").style.display="none";
         document.getElementById("mainPage").style.display="block";
-        document.getElementById("displayName").innerText=user.username;
-        document.getElementById("displayAvatar").src=user.avatar;
+        document.getElementById("displayName").innerText=parsedUser.username;
+        document.getElementById("displayAvatar").src=parsedUser.avatar;
         renderPosts();
     }
 }
@@ -130,7 +168,10 @@ function addPost(){
     const desc = document.getElementById("description").value;
     const user = JSON.parse(localStorage.getItem("currentUser"));
 
-    if(!file) return alert("Chọn ảnh!");
+    if(!file){
+        alert("Choose an image!");
+        return;
+    }
 
     const reader = new FileReader();
     reader.onload = function(e){
@@ -145,7 +186,7 @@ function addPost(){
         });
         savePosts();
         renderPosts();
-    }
+    };
     reader.readAsDataURL(file);
 }
 
@@ -163,7 +204,7 @@ function renderPosts(){
         const content = document.createElement("div");
         content.className="card-content";
 
-        content.innerHTML = `
+        content.innerHTML=`
             <div style="display:flex;align-items:center;gap:8px;">
                 <img src="${post.avatar}" class="avatar">
                 <b>${post.user}</b>
@@ -171,15 +212,15 @@ function renderPosts(){
             <div>${post.desc}</div>
             <button onclick="likePost(${post.id})">❤️ ${post.likes}</button>
             <div>
-                <input placeholder="Viết bình luận..." 
+                <input placeholder="Write a comment..." 
                 onkeypress="if(event.key==='Enter'){addComment(${post.id}, this.value); this.value='';}">
             </div>
         `;
 
         post.comments.forEach(c=>{
-            const comment = document.createElement("div");
+            const comment=document.createElement("div");
             comment.className="comment";
-            comment.innerText = c.user + ": " + c.text;
+            comment.innerText=c.user+": "+c.text;
             content.appendChild(comment);
         });
 
@@ -190,22 +231,26 @@ function renderPosts(){
 }
 
 function likePost(id){
-    const post = posts.find(p=>p.id===id);
-    post.likes++;
-    savePosts();
-    renderPosts();
+    const post=posts.find(p=>p.id===id);
+    if(post){
+        post.likes++;
+        savePosts();
+        renderPosts();
+    }
 }
 
 function addComment(id,text){
     if(!text) return;
-    const user = JSON.parse(localStorage.getItem("currentUser"));
-    const post = posts.find(p=>p.id===id);
-    post.comments.push({
-        user: user.username,
-        text: text
-    });
-    savePosts();
-    renderPosts();
+    const user=JSON.parse(localStorage.getItem("currentUser"));
+    const post=posts.find(p=>p.id===id);
+    if(post && user){
+        post.comments.push({
+            user:user.username,
+            text:text
+        });
+        savePosts();
+        renderPosts();
+    }
 }
 
 loadUser();
@@ -214,4 +259,3 @@ loadUser();
 
 </body>
 </html>
-
